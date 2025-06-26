@@ -3,7 +3,7 @@ import Navigation from "../components/Navigation";
 
 const Home = () => {
   return (
-    <div>
+    <div className="sec">
       <Navigation />
       <h1>Acceil</h1>
     </div>
