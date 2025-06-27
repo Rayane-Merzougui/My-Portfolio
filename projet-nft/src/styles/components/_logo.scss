@@ -1,0 +1,16 @@
+.logo {
+  @include verticalCenter;
+  margin: 5px auto;
+  width: 350px;
+  border-radius: 20px;
+  padding: 5px 0;
+  img {
+    height: 40px;
+    border-radius: 20px;
+  }
+  h3 {
+    margin-left: 10px;
+    color: aliceblue;
+    font-size: 35px;
+  }
+}
