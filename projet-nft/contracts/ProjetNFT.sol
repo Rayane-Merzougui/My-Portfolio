@@ -66,9 +66,40 @@ contract ProjetNFT is ERC721URIStorage {
     uint nftCount = _tokenIds.current();
     listedToken[] memory tokens = new listedToken[](nftCount);
     uint currentIndex = 0;
-    for(i=0;1<nftCount;i++){
+    for(uint i=0;i<nftCount;i++)
+    {
         uint currentId = i+1;
         listedToken storage currentItem = idTolistedToken[currentId];
+        tokens[currentIndex] = currentItem;
+        currentIndex += 1;
     }
+    return tokens;
+   }
+   function getMyNFTs() public view returns(listedToken[] memory){
+    uint totalItemCount = _tokenIds.current();
+    uint itemCount = 0;
+    uint currentIndex = 0;
+    for(uint i=0; i<totalItemCount; i++){
+        if(idTolistedToken[i+1].owner == msg.sender || idTolistedToken[i+1].seller == msg.sender){
+            itemCount +=1;
+        }
+    }
+    listedToken[] memory items = new listedToken[](itemCount);
+    for(uint i=0;i<totalItemCount;i++){
+        if(idTolistedToken[i+1].owner == msg.sender || idTolistedToken[i+1].seller == msg.sender){ 
+        uint currentId = i+1;
+        listedToken storage currentItem = idTolistedToken[currentId];
+        items[currentIndex] = currentItem;
+        currentIndex += 1;
+        }
+    }
+    return items;
+   }
+   function excuteSale(uint256 tokenId) public payable {
+    uint price = idTolistedToken[tokenId].price;
+    require(msg.value == price, "Please submit the asking price for the NFY in order to purshase");
+    address seller = idTolistedToken[tokenId].seller;
+    idTolistedToken[tokenId].currentlyListed = true;
+    idTolistedToken[tokenId].seller = payable(msg.sender);
    }
 }
