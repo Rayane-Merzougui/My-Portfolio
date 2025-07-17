@@ -101,5 +101,10 @@ contract ProjetNFT is ERC721URIStorage {
     address seller = idTolistedToken[tokenId].seller;
     idTolistedToken[tokenId].currentlyListed = true;
     idTolistedToken[tokenId].seller = payable(msg.sender);
+    _itemsSold.increment();
+    _transfer(address(this), msg.sender, tokenId);
+    approve(address(this), tokenId);
+    payable(owner).transfer(listPrice);
+    payable(seller).transfer(msg.value);
    }
 }
