@@ -4,8 +4,12 @@ try {
 }catch(PDOException $exception){
     die("Erreur: {$exception->getMessage()}");
 }
-$emails = $databaseConnexion->query("SELECT email FROM user")->fetchAll(PD0 :: FETCH_ASSOC);
+$emails = $databaseConnexion->query("SELECT email FROM utilisateurs")->fetchAll(PDO :: FETCH_ASSOC);
+var_dump($emails);
 $allEmails= [];
+foreach($emails as $email){
+    $allEmails[]=$email["email"];
+}
 $_POST;
 $name = $_POST['name'];
 $email = $_POST['email'];
@@ -26,3 +30,16 @@ if (mb_strlen($name)<4 || mb_strlen($name)>32 ) {
 if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
     $errors['email']="L'email n'est pas valide";
 }
+if(in_array($email, $allEmails)){
+    $errors['email']="Cette email existe déjà";
+}
+if(empty($errors)){
+    $q = $databaseConnexion->prepare("INSERT INTO utilisateurs (Nom, Email, Password) VALUE(:nom, :email, :password)");
+    $q->execute([
+        'name'=> $name,
+        'email'=> $email,
+        'password'=> password_hash($password, PASSWORD_BCRYPT)
+    ]);
+}
+header("location:index.html?n=$name&e=$email&p=$password");
+die;
