@@ -1,45 +1,61 @@
 <?php
+// Autoriser l'accès depuis ton frontend React
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json; charset=UTF-8");
+
+// Connexion à MySQL avec PDO
 try {
-    $databaseConnexion = new PDO(dsn: "mysql:dbname=form-validation", username:'root', password:'');
-}catch(PDOException $exception){
-    die("Erreur: {$exception->getMessage()}");
+    $databaseConnexion = new PDO("mysql:host=localhost;dbname=form-validation;charset=utf8", "root", "");
+    $databaseConnexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    echo json_encode(["status" => "error", "message" => "Connexion échouée: " . $e->getMessage()]);
+    exit;
 }
-$emails = $databaseConnexion->query("SELECT email FROM utilisateurs")->fetchAll(PDO :: FETCH_ASSOC);
-var_dump($emails);
-$allEmails= [];
-foreach($emails as $email){
-    $allEmails[]=$email["email"];
+
+// Récupérer les données envoyées par React
+$input = file_get_contents("php://input");
+$data = json_decode($input, true);
+
+// Tableau pour stocker les erreurs
+$errors = [];
+
+// Vérification si les champs existent
+if (!$data || empty($data['name']) || empty($data['email']) || empty($data['password'])) {
+    $errors[] = "Veuillez remplir tous les champs";
+} else {
+    $name = htmlspecialchars($data['name']);
+    $email = htmlspecialchars($data['email']);
+    $password = $data['password'];
+
+    // Vérifier si l'email existe déjà
+    $stmt = $databaseConnexion->prepare("SELECT COUNT(*) FROM utilisateurs WHERE Email = ?");
+    $stmt->execute([$email]);
+    $emailExists = $stmt->fetchColumn();
+
+    if ($emailExists > 0) {
+        $errors[] = "Cet email existe déjà";
+    }
 }
-$_POST;
-$name = $_POST['name'];
-$email = $_POST['email'];
-$password = $_POST['password'];
-$errors=[];
-if ($name=== ""){
-    echo"Vous avez oublier votre nom d'utilisateur";
-}else if ($email=== ""){
-    echo"Vous avez oublier votre email";
-}else if ($password=== ""){
-    echo"Mot de passe invalide";
-}else{
-    echo "Inscription validé";
-}
-if (mb_strlen($name)<4 || mb_strlen($name)>32 ) {
-    $errors['name'] = "Le nom doit comporter entre 4 et 32 caractères";
-}
-if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-    $errors['email']="L'email n'est pas valide";
-}
-if(in_array($email, $allEmails)){
-    $errors['email']="Cette email existe déjà";
-}
-if(empty($errors)){
-    $q = $databaseConnexion->prepare("INSERT INTO utilisateurs (Nom, Email, Password) VALUE(:nom, :email, :password)");
+
+// Si pas d'erreurs, insérer le nouvel utilisateur
+if (empty($errors)) {
+    $q = $databaseConnexion->prepare("INSERT INTO utilisateurs (Nom, Email, Password) VALUES (:nom, :email, :password)");
     $q->execute([
-        'name'=> $name,
-        'email'=> $email,
-        'password'=> password_hash($password, PASSWORD_BCRYPT)
+        'nom'      => $name,
+        'email'    => $email,
+        'password' => password_hash($password, PASSWORD_BCRYPT) // hash sécurisé
+    ]);
+
+    echo json_encode([
+        "status"  => "success",
+        "message" => "Utilisateur inscrit avec succès",
+        "user"    => $name
+    ]);
+} else {
+    echo json_encode([
+        "status"  => "error",
+        "message" => $errors
     ]);
 }
-header("location:index.html?n=$name&e=$email&p=$password");
-die;
