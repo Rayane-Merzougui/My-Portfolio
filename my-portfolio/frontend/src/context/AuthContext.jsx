@@ -8,20 +8,32 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api
-      .get("/me")
-      .then((res) => setUser(res.data.user))
-      .finally(() => setLoading(false));
+    const checkAuth = async () => {
+      try {
+        const response = await api.get("/me");
+        console.log("Auth check response:", response.data);
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email, password) => {
     const { data } = await api.post("/login", { email, password });
     setUser(data.user);
+    return data;
   };
 
   const register = async (name, email, password) => {
     const { data } = await api.post("/register", { name, email, password });
     setUser(data.user);
+    return data;
   };
 
   const logout = async () => {

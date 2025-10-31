@@ -17,7 +17,7 @@ if ($stmt->fetch()) json(['error' => 'Email déjà utilisé'], 409);
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
 $pdo->prepare('INSERT INTO users (email, password_hash, name) VALUES (?, ?, ?)')
-	->execute([$email, $hash, $name]);
+    ->execute([$email, $hash, $name]);
 
 $id = (int)$pdo->lastInsertId();
 $_SESSION['user'] = ['id' => $id, 'email' => $email, 'name' => $name, 'avatar_url' => null];
