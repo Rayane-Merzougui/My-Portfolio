@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// Headers CORS doivent être envoyés AVANT session_start()
+
 header('Access-Control-Allow-Origin: http://localhost:5173');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With, Authorization, Accept, Origin, X-Requested-With');
@@ -15,15 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Configuration CORRECTE des sessions
-ini_set('session.cookie_samesite', 'Lax'); // ← Changez de 'None' à 'Lax'
-ini_set('session.cookie_secure', false);   // ← Gardez false en développement
+ini_set('session.cookie_samesite', 'Lax'); 
+ini_set('session.cookie_secure', false);  
 ini_set('session.cookie_httponly', true);
 ini_set('session.use_strict_mode', true);
 
-// Maintenant on peut démarrer la session
 session_start();
 
-// Le reste du code reste identique...
+
 function db(): PDO {
     static $pdo = null;
     if ($pdo) return $pdo;

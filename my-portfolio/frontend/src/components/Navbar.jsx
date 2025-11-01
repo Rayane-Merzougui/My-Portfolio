@@ -34,7 +34,7 @@ export default function Navbar() {
               className="avatar"
               src={
                 user.avatar_url
-                  ? `http://127.0.0.1:8000${user.avatar_url}`
+                  ? `http://localhost:8000${user.avatar_url}`
                   : "https://via.placeholder.com/40"
               }
               alt="avatar"

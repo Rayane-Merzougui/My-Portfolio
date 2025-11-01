@@ -25,7 +25,7 @@ export default function Home() {
                 className="mini-avatar"
                 src={
                   a.avatar_url
-                    ? `http://127.0.0.1:8000${a.avatar_url}`
+                    ? `http://localhost:8000${a.avatar_url}`
                     : "https://via.placeholder.com/24"
                 }
               />
