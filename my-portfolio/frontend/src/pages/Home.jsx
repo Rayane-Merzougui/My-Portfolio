@@ -31,7 +31,7 @@ export default function Home() {
               />
               <span className="author">{a.author_name}</span>
               <span className="date">
-                {new Date(a.created_at).toLocaleString()}
+                {new Date(a.created_at).toLocaleDateString()}
               </span>
             </div>
             <h3>{a.title}</h3>

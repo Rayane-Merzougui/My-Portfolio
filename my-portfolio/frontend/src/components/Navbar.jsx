@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function Navbar() {
   const { user, logout, uploadAvatar } = useAuth();
   const fileRef = useRef();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const onPick = () => fileRef.current?.click();
   const onChange = (e) => {
@@ -19,11 +20,33 @@ export default function Navbar() {
           Mon Portfolio
         </Link>
       </div>
-      <div className="nav-right">
+
+      <button
+        className="hamburger-btn"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        style={{
+          display: "none",
+          background: "none",
+          border: "none",
+          color: "var(--text)",
+          fontSize: "20px",
+          cursor: "pointer",
+        }}
+      >
+        ☰
+      </button>
+
+      <div className={`nav-right ${isMenuOpen ? "mobile-open" : ""}`}>
         {!user ? (
           <>
-            <Link to="/login">Connexion</Link>
-            <Link to="/register" className="btn">
+            <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+              Connexion
+            </Link>
+            <Link
+              to="/register"
+              className="btn"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Inscription
             </Link>
           </>
@@ -47,10 +70,20 @@ export default function Navbar() {
               hidden
               onChange={onChange}
             />
-            <Link to="/new" className="btn">
+            <Link
+              to="/new"
+              className="btn"
+              onClick={() => setIsMenuOpen(false)}
+            >
               Nouvel article
             </Link>
-            <button onClick={logout} className="link">
+            <button
+              onClick={() => {
+                logout();
+                setIsMenuOpen(false);
+              }}
+              className="link"
+            >
               Déconnexion
             </button>
           </div>

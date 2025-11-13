@@ -148,3 +148,182 @@ a {
   color: var(--text);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
+@media (max-width: 768px) {
+  .container {
+    margin: 100px auto 20px;
+    padding: 0 12px;
+  }
+
+  .navbar {
+    height: 56px;
+    padding: 0 12px;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .nav-right,
+  .nav-left {
+    gap: 8px;
+  }
+
+  .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+
+  .user-box {
+    gap: 8px;
+
+    .name {
+      display: none; // Cache le nom sur mobile
+    }
+  }
+
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .card {
+    padding: 16px;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  .home .articles {
+    gap: 12px;
+  }
+
+  .article {
+    padding: 12px;
+
+    .meta {
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin: 8px 0;
+    }
+
+    p {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    button {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    span {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin: 90px auto 16px;
+  }
+
+  .navbar {
+    height: 52px;
+
+    .nav-right {
+      gap: 6px;
+    }
+  }
+
+  .btn {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .article {
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  input,
+  textarea {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+}
+
+// Pour les très grands écrans
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1100px;
+  }
+}
+.hamburger-btn {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: block !important;
+    z-index: 1001;
+  }
+
+  .nav-right {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background: var(--card);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 80px;
+    gap: 20px;
+    transition: right 0.3s ease;
+    z-index: 1000;
+
+    &.mobile-open {
+      right: 0;
+    }
+
+    a,
+    button {
+      width: 80%;
+      text-align: center;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-box {
+      flex-direction: column;
+      gap: 20px;
+      width: 80%;
+
+      .name {
+        display: block !important;
+      }
+    }
+  }
+}
